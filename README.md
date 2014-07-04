@@ -18,5 +18,7 @@ I decided to make this library use MessageBoxes to interact with the end-user.
 Although this may not be the best idea, I will leave any changes to this system 
 until they are needed by anyone.
 
+This library uses the System.Data.SQLite library to communicate with SQLite databases
+
 ## TO-DO LIST ##
 0) Make a to-do list.
