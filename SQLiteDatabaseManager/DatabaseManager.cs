@@ -215,7 +215,38 @@ namespace SQLiteDatabaseManager
                 System.Windows.Forms.MessageBox.Show("Connection Failed to Open!");
                 return false;
             }
-            
+        }
+
+        public bool DeleteFromTable(string TableName, string Options)
+        {
+            if (OpenConnection())
+            {
+                // The connection is open and can be used for processing commands
+                try
+                {
+                    string sqlQuery = "DELETE FROM " + TableName + " WHERE " + Options;
+                    SQLiteCommand command = new SQLiteCommand(sqlQuery, connection);
+                    command.ExecuteNonQuery();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    if (System.Windows.Forms.MessageBox.Show("Error Deleting an Entry from Table:\n" + e.Message,
+                        "Error Deleting Entry", System.Windows.Forms.MessageBoxButtons.RetryCancel,
+                        System.Windows.Forms.MessageBoxIcon.Error) == System.Windows.Forms.DialogResult.Retry)
+                    {
+                        return (DeleteFromTable(TableName, Options));
+                    }
+                    else
+                        return false;
+                }
+            }
+            else
+            {
+                // There was an error opening the connection! Notify the user!
+                System.Windows.Forms.MessageBox.Show("Connection failed to open!");
+                return false;
+            }
         }
     }
 }
