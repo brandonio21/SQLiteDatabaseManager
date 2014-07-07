@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace SQLiteDatabaseManager
 {
-    class DatabaseManager
+    public class DatabaseManager
     {
         private static readonly string DATABASE_FILE = "database.sqlite";
 
@@ -131,7 +131,9 @@ namespace SQLiteDatabaseManager
                 {
                     string sqlQuery = "INSERT INTO " + TableName + " (" + Fields + ") values (" + Values + ")";
                     SQLiteCommand command = new SQLiteCommand(sqlQuery, connection);
-                    long id = (long)command.ExecuteScalar();
+                    command.ExecuteNonQuery();
+                    SQLiteCommand getInsertId = new SQLiteCommand(@"select last_insert_rowid()", connection);
+                    long id = (long)getInsertId.ExecuteScalar();
                     return id;
                 }
                 catch (Exception e)
