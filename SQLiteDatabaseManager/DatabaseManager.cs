@@ -153,5 +153,36 @@ namespace SQLiteDatabaseManager
                 return -1;
             }
         }
+
+        public SQLiteDataReader SelectFromTable(String Fields, String TableName, String Options)
+        {
+            if (OpenConnection())
+            {
+                // The connection is open and can be used for processing commands
+                try
+                {
+                    string sqlQuery = "SELECT " + Fields + " FROM " + TableName + " " + Options;
+                    SQLiteCommand command = new SQLiteCommand(sqlQuery, connection);
+                    return command.ExecuteReader();
+                }
+                catch (Exception e)
+                {
+                    if (System.Windows.Forms.MessageBox.Show("Error selecting from the table:\n" + e.Message, 
+                        "Error Selecting from Table", System.Windows.Forms.MessageBoxButtons.RetryCancel,
+                        System.Windows.Forms.MessageBoxIcon.Error) == System.Windows.Forms.DialogResult.Retry)
+                    {
+                        return (SelectFromTable(Fields, TableName, Options));
+                    }
+                    else
+                        return null;
+                }
+            }
+            else
+            {
+                // There was an error opening the connection! Notify the user!
+                System.Windows.Forms.MessageBox.Show("Connection Failed to Open!");
+                return null;
+            }
+        }
     }
 }
