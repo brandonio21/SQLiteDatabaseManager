@@ -184,5 +184,38 @@ namespace SQLiteDatabaseManager
                 return null;
             }
         }
+
+        public bool UpdateTable(string TableName, string SetString, string Options)
+        {
+            if (OpenConnection())
+            {
+                // The connection is open and can be used for processing commands now
+                try
+                {
+                    String sqlQuery = "UPDATE " + TableName + " " + SetString + " " + Options;
+                    SQLiteCommand command = new SQLiteCommand(sqlQuery, connection);
+                    command.ExecuteNonQuery();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    if (System.Windows.Forms.MessageBox.Show("Error Updating the Tables:\n" + e.Message,
+                        "Error Updating Table!", System.Windows.Forms.MessageBoxButtons.RetryCancel,
+                        System.Windows.Forms.MessageBoxIcon.Error) == System.Windows.Forms.DialogResult.Retry)
+                    {
+                        return (UpdateTable(TableName, SetString, Options));
+                    }
+                    else
+                        return false;
+                }
+            }
+            else
+            {
+                // There was some sort of error opening the connection!
+                System.Windows.Forms.MessageBox.Show("Connection Failed to Open!");
+                return false;
+            }
+            
+        }
     }
 }
