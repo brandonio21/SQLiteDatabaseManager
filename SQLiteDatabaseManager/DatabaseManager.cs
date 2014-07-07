@@ -31,6 +31,10 @@ namespace SQLiteDatabaseManager
 
         public bool OpenConnection()
         {
+            // If the connection already exists, we will just let it be
+            if (connection != null && connection.State == System.Data.ConnectionState.Open)
+                return true;
+
             try
             {
                 connection = new SQLiteConnection("Data Source=" + DATABASE_FILE);
@@ -86,14 +90,14 @@ namespace SQLiteDatabaseManager
             }
         }
 
-        public bool CreateDatabaseTables(string CreationString)
+        public bool CreateDatabaseTables(string TableString)
         {
             if (OpenConnection())
             {
                 // The connection is opened and can be used!
                 try
                 {
-                    SQLiteCommand command = new SQLiteCommand(CreationString, connection);
+                    SQLiteCommand command = new SQLiteCommand("CREATE TABLE " + TableString, connection);
                     command.ExecuteNonQuery();
                     return true;
                 }
@@ -103,7 +107,7 @@ namespace SQLiteDatabaseManager
                         e.Message, "Error Creating Tables", System.Windows.Forms.MessageBoxButtons.RetryCancel,
                         System.Windows.Forms.MessageBoxIcon.Error) == System.Windows.Forms.DialogResult.Retry)
                     {
-                        return (CreateDatabaseTables(CreationString));
+                        return (CreateDatabaseTables(TableString));
                     }
                     else
                         return false;
@@ -115,6 +119,38 @@ namespace SQLiteDatabaseManager
                 // There is no connection, we must notify!
                 System.Windows.Forms.MessageBox.Show("Connection Failed to Open!");
                 return false;
+            }
+        }
+
+        public long InsertIntoTable(string TableName, string Fields, string Values)
+        {
+            if (OpenConnection())
+            {
+                // The connection is open and can be used for processing commands
+                try
+                {
+                    string sqlQuery = "INSERT INTO " + TableName + " (" + Fields + ") values (" + Values + ")";
+                    SQLiteCommand command = new SQLiteCommand(sqlQuery, connection);
+                    long id = (long)command.ExecuteScalar();
+                    return id;
+                }
+                catch (Exception e)
+                {
+                    if (System.Windows.Forms.MessageBox.Show("Error inserting record into table:\n" + e.Message,
+                        "Error Inserting into Table", System.Windows.Forms.MessageBoxButtons.RetryCancel,
+                        System.Windows.Forms.MessageBoxIcon.Error) == System.Windows.Forms.DialogResult.Retry)
+                    {
+                        return (InsertIntoTable(TableName, Fields, Values));
+                    }
+                    else
+                        return -1;
+                }
+            }
+            else
+            {
+                // There is no connection! NOTIFY DA USER!
+                System.Windows.Forms.MessageBox.Show("Connection failed to Open!");
+                return -1;
             }
         }
     }
