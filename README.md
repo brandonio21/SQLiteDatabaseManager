@@ -22,3 +22,34 @@ This library uses the System.Data.SQLite library to communicate with SQLite data
 
 ## TO-DO LIST ##
 0) Make a to-do list.
+
+
+
+## Usage Documentation ##
+*Please Note: This Documentation Is Subject to Change as the library evolves*  
+
+**Creating a DatabaseManager object**
+```c#
+DatabaseManager db = new DatabaseManager();
+```
+
+**Creating A New Table**
+```c#
+db.CreateDatabaseTables("names (name VARCHAR(20))");
+```
+
+**Inserting Records Into the Database**
+```c#
+db.InsertIntoTable("names", "name", "'Brandon'");
+```  
+*Note that this function returns the ID of the inserted record*  
+
+**Selecting a Record from the Table**
+```c#
+SQLiteDataReader results = db.SelectFromTable("*", "names", "WHERE name='Brandon'");
+```
+
+**Closing The Connection**
+```c#
+db.CloseConnection();;
+```
