@@ -248,5 +248,11 @@ namespace SQLiteDatabaseManager
                 return false;
             }
         }
+
+        public void CloseConnection()
+        {
+            if (connection != null && connection.State == System.Data.ConnectionState.Open)
+                connection.Close();
+        }
     }
 }
