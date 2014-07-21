@@ -12,4 +12,3 @@ C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabase
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.DataSetExtensions.dll
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.SQLite.Linq.dll
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.SQLite.Linq.pdb
-C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\obj\Debug\SQLiteDatabaseManager.csprojResolveAssemblyReference.cache

@@ -122,19 +122,19 @@ namespace SQLiteDatabaseManager
             }
         }
 
-        public long InsertIntoTable(string TableName, string Fields, string Values)
+        public int InsertIntoTable(string TableName, string Fields, string Values)
         {
             if (OpenConnection())
             {
                 // The connection is open and can be used for processing commands
                 try
                 {
-                    string sqlQuery = "INSERT INTO " + TableName + " (" + Fields + ") values (" + Values + ")";
+                    string sqlQuery = "INSERT INTO " + TableName + " (" + Fields + ") VALUES (" + Values + ")";
                     SQLiteCommand command = new SQLiteCommand(sqlQuery, connection);
                     command.ExecuteNonQuery();
                     SQLiteCommand getInsertId = new SQLiteCommand(@"select last_insert_rowid()", connection);
                     long id = (long)getInsertId.ExecuteScalar();
-                    return id;
+                    return (int)id;
                 }
                 catch (Exception e)
                 {
