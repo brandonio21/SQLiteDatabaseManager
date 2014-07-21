@@ -2,13 +2,14 @@ C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabase
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\SQLiteDatabaseManager.pdb
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\EntityFramework.dll
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\SQLite.Designer.dll
+C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.DataSetExtensions.dll
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.SQLite.dll
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.SQLite.Linq.dll
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\SQLite.Designer.pdb
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.SQLite.pdb
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.SQLite.EF6.pdb
+C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.SQLite.Linq.pdb
+C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\obj\Debug\SQLiteDatabaseManager.csprojResolveAssemblyReference.cache
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\obj\Debug\SQLiteDatabaseManager.dll
 C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\obj\Debug\SQLiteDatabaseManager.pdb
-C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.DataSetExtensions.dll
-C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.SQLite.Linq.dll
-C:\Users\Brandon\Dropbox\Visual Studio 2013\SQLiteDatabaseManager\SQLiteDatabaseManager\bin\Debug\System.Data.SQLite.Linq.pdb
