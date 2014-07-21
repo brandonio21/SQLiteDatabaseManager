@@ -20,6 +20,10 @@ until they are needed by anyone.
 
 This library uses the System.Data.SQLite library to communicate with SQLite databases.
 
+I have found that the main benefit of using this library is not having to worry about
+opening the connection or creating the database file, as this is handled within the library.
+If this is something you must absolutely do, this library will probably be of 0 use to you.
+
 ## TO-DO LIST ##
 0) Make a to-do list.
 
