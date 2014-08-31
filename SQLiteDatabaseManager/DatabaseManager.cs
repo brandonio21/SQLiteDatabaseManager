@@ -16,17 +16,24 @@ namespace SQLiteDatabaseManager
 
         public DatabaseManager()
         {
-            // Let's see if the database file exists first
-            if (!(DatabaseExists()))
-            {
-                if (!(CreateDatabase()))
-                {
-                    System.Windows.Forms.MessageBox.Show("Cannot create database file!");
-                    return;
-                }
 
-            }
-            // The database is now in existence!
+        }
+
+        public DatabaseManager(bool makeDatabase)
+        {
+            if (makeDatabase)
+            {
+                // Let's see if the database file exists first
+                if (!(DatabaseExists()))
+                {
+                    if (!(CreateDatabase()))
+                    {
+                        System.Windows.Forms.MessageBox.Show("Cannot create database file!");
+                        return;
+                    }
+                }
+                // The database is now in existence!
+            } 
         }
 
         public bool OpenConnection()
