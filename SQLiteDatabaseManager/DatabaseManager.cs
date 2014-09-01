@@ -58,6 +58,16 @@ namespace SQLiteDatabaseManager
             System.IO.File.Copy(applicationPath + "\\backups\\" + FileName, applicationPath + "\\" + DATABASE_FILE, true);
         }
 
+        public void PurgeBackups(string applicationPath, int DayLimit)
+        {
+            foreach (String filename in System.IO.Directory.GetFiles(applicationPath + "\\backups\\", "*.sqlite", System.IO.SearchOption.TopDirectoryOnly))
+            {
+                System.IO.FileInfo info = new System.IO.FileInfo(filename);
+                if ((int)DateTime.UtcNow.Subtract(info.CreationTimeUtc).TotalDays > DayLimit)
+                    info.Delete();
+            }
+        }
+
         public string GetMostRecentBackup(string applicationPath)
         {
             System.IO.FileInfo mostRecentFile = null;
