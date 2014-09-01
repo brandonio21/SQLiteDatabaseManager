@@ -11,6 +11,7 @@ namespace SQLiteDatabaseManager
     public class DatabaseManager
     {
         private static readonly string DATABASE_FILE = "database.sqlite";
+        private Dictionary<string, string> tables;
 
         private SQLiteConnection connection;
 
@@ -94,6 +95,81 @@ namespace SQLiteDatabaseManager
                 }
                 else
                     return false;
+            }
+        }
+
+        public void AddTable(string TableName, string TableString)
+        {
+            if (this.tables == null)
+                this.tables = new Dictionary<string, string>();
+
+            this.tables.Add(TableName, TableString);
+        }
+
+        public bool CreateAllTables()
+        {
+            if (OpenConnection())
+            {
+                // There is an open connection to the database
+                foreach (string creationString in this.tables.Values)
+                {
+                    try
+                    {
+                        SQLiteCommand command = new SQLiteCommand("CREATE TABLE " + creationString, connection);
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Error creating a table due to unknown errors. Skipping table creation:\n{0}", e.Message.ToString());
+                        continue;
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                // For whatever reason, a connection failed to open
+                System.Windows.Forms.MessageBox.Show("Connection Failed to Open!");
+                return false;
+            }
+        }
+
+        public bool TablesAreVerified()
+        {
+            if (OpenConnection())
+            {
+                // The connection is opened and can be used!
+                try
+                {
+                    SQLiteCommand command = new SQLiteCommand("SELECT name FROM sqlite_master WHERE type=\"table\"", connection);
+                    SQLiteDataReader results = command.ExecuteReader();
+                    List<string> tableNames = new List<string>();
+                    foreach (string key in this.tables.Keys)
+                        tableNames.Add(key);
+
+                    while (results.Read())
+                    {
+                        string tableName = results.GetValue(0).ToString();
+                        if (tableNames.Contains(tableName))
+                            tableNames.Remove(tableName);
+                    }
+                    results.Close();
+                    if (tableNames.Count > 0)
+                        return false;
+                    else
+                        return true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Some error occurred while verifying the integrity of the tables.\n{0}", e.Message.ToString());
+                    return false;
+                }
+            }
+            else
+            {
+                // There is no connection, we must notify!
+                System.Windows.Forms.MessageBox.Show("Connection Failed to Open!");
+                return false;
             }
         }
 
