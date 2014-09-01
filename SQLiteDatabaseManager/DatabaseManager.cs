@@ -37,6 +37,47 @@ namespace SQLiteDatabaseManager
             } 
         }
 
+        public void CreateBackup(string applicationPath)
+        {
+            TimeSpan t = (DateTime.UtcNow - new DateTime(1970, 1, 1));
+            CreateBackup(applicationPath, ((long)t.TotalSeconds).ToString() + ".sqlite");
+        }
+
+        public void CreateBackup(string applicationPath, string FileName)
+        {
+            if (!(System.IO.Directory.Exists(applicationPath + "\\backups")))
+                System.IO.Directory.CreateDirectory(applicationPath + "\\backups");
+
+            if (System.IO.File.Exists(applicationPath + "\\" + DATABASE_FILE))
+                System.IO.File.Copy(applicationPath + "\\" + DATABASE_FILE, applicationPath + "\\backups\\" + FileName, true);
+        }
+
+        public void RestoreBackup(string applicationPath, string FileName)
+        {
+            CreateBackup(applicationPath);
+            System.IO.File.Copy(applicationPath + "\\backups\\" + FileName, applicationPath + "\\" + DATABASE_FILE, true);
+        }
+
+        public string GetMostRecentBackup(string applicationPath)
+        {
+            System.IO.FileInfo mostRecentFile = null;
+            DateTime mostRecentTime = DateTime.MinValue;
+            foreach (String fileName in System.IO.Directory.GetFiles(applicationPath + "\\backups\\", "*.sqlite", System.IO.SearchOption.TopDirectoryOnly))
+            {
+                System.IO.FileInfo f = new System.IO.FileInfo(fileName);
+                if (f.CreationTimeUtc.Subtract(mostRecentTime).TotalSeconds > 0)
+                {
+                    mostRecentFile = f;
+                    mostRecentTime = f.CreationTimeUtc;
+                }
+            }
+            if (mostRecentFile == null)
+                return null;
+            else
+                return mostRecentFile.Name;
+
+        }
+
         public bool OpenConnection()
         {
             // If the connection already exists, we will just let it be
