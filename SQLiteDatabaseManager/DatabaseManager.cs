@@ -102,6 +102,9 @@ namespace SQLiteDatabaseManager
         */
         public void PurgeBackups(string applicationPath, int DayLimit)
         {
+            if (!(System.IO.Directory.Exists(applicationPath + "\\backups")))
+                return;
+
             // Loop through all backup files
             foreach (String filename in System.IO.Directory.GetFiles(applicationPath + "\\backups\\", "*.sqlite", System.IO.SearchOption.TopDirectoryOnly))
             {
