@@ -39,7 +39,20 @@ DatabaseManager db = new DatabaseManager();
 
 **Creating A New Table**
 ```c#
-db.CreateDatabaseTables("names (name VARCHAR(20))");
+db.AddTable("names", "names (name VARCHAR(20))");
+db.CreateAllTables();
+```
+
+**Verifying Tables**
+By calling the `AddTable` method, you create a table structure that can be
+verified by using the included verification method
+```c#
+if (db.TablesAreVerified())
+	Console.WriteLine("All Tables Exist in the DB!");
+else {
+	db.CreateAllTables();
+	Console.WriteLine("Tables Missing from the DB - Restored.");
+}
 ```
 
 **Inserting Records Into the Database**
