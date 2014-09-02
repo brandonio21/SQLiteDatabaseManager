@@ -70,3 +70,14 @@ SQLiteDataReader results = db.SelectFromTable("*", "names", "WHERE name='Brandon
 ```c#
 db.CloseConnection();;
 ```
+
+**Manage Backups**
+```c#
+// To Create a backup with a standard timestamp name
+db.CreateBackup(System.IO.Directory.GetCurrentDirectory());
+
+// To restore the latest backup
+string currentDir = System.IO.Directory.GetCurrentDirectory();
+db.RestoreBackup(currentDir, 
+	db.GetMostRecentBackup(currentDir));
+```
