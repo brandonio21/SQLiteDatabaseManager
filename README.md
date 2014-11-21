@@ -34,7 +34,9 @@ If this is something you must absolutely do, this library will probably be of 0 
 
 **Creating a DatabaseManager object**
 ```c#
-DatabaseManager db = new DatabaseManager();
+// Specifying the "true" variable allows us to create a database for
+// first use. Does not need to be "true" when database is already created.
+DatabaseManager db = new DatabaseManager(true);
 ```
 
 **Creating A New Table**
