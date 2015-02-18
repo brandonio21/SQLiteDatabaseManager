@@ -220,6 +220,43 @@ namespace SQLiteDatabaseManager
             }
         }
 
+        /* DeleteDatabase Method
+         * This method deletes the database file from the filesystem.
+         * @return A boolean indicating the success of the deletion of the database file.
+         */
+        public bool DeleteDatabase()
+        {
+            try
+            {
+                // First, close an existing connection.
+                CloseConnection();
+
+                // Now, delete the database file
+                System.IO.File.Delete(DATABASE_FILE);
+
+                // Check to see if the file exists
+                if (System.IO.File.Exists(DATABASE_FILE))
+                    return false;
+                else
+                    return true;
+            }
+            catch (Exception e)
+            {
+                 // On an error, display an error prompt.
+                if (System.Windows.Forms.MessageBox.Show("Something went wrong while" +
+                    " trying to deleting the database file!\n" + e.StackTrace,
+                    "Error Deleting Database File!", System.Windows.Forms.MessageBoxButtons.RetryCancel,
+                    System.Windows.Forms.MessageBoxIcon.Error) == System.Windows.Forms.DialogResult.Retry)
+                {
+                    return DeleteDatabase();
+                }
+                else
+                    return false;
+            }
+
+        }
+
+
         /* AddTable Method
         * Adds a table name (and its SQLite creation string) to the 
         * dictionary of tables, allowing the table to be verified or 
