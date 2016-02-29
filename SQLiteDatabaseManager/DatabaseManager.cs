@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace SQLiteDatabaseManager
@@ -20,8 +19,8 @@ namespace SQLiteDatabaseManager
     public class DatabaseManager
     {
         // Define the single database file
-        private static readonly string DATABASE_FILE = "database.sqlite"; 
         private Dictionary<string, string> tables;
+        private string DATABASE_FILE = "database.sqlite";
 
         // Only a single connection will exist to this database
         private SQLiteConnection connection;
@@ -29,14 +28,20 @@ namespace SQLiteDatabaseManager
         // Default constructor
         public DatabaseManager() {}
 
+        public DatabaseManager(string databasePath = "database.sqlite")
+        {
+            DATABASE_FILE = databasePath;
+        }
+
         /* Constructor with option to make database
         * Creates a new instance of a DatabaseManager and if specified
         * also creates the database file.
         * @param makeDatabase - A boolean indicating whether or not to make the DB file
         * @return A new instance of the DatabaseManager object
         */
-        public DatabaseManager(bool makeDatabase)
+        public DatabaseManager(bool makeDatabase, string databasePath="database.sqlite")
         {
+            DATABASE_FILE = databasePath;
             if (makeDatabase)
             {
                 // Let's see if the database file exists first
@@ -308,6 +313,42 @@ namespace SQLiteDatabaseManager
             }
         }
 
+        public bool TableHasColumn(string tableName, string columnName)
+        {
+            if (OpenConnection())
+            {
+                // The connection is opened and ready to use.
+                try
+                {
+                    SQLiteCommand command = new SQLiteCommand("PRAGMA table_info(" + tableName + ")", connection);
+                    SQLiteDataReader results = command.ExecuteReader();
+
+                    bool hasColumn = false;
+                    while (results.Read())
+                    {
+                        if (results.GetValue(1).ToString().Equals(columnName))
+                        {
+                            hasColumn = true;
+                            break;
+                        }
+                    }
+                    results.Close();
+                    return hasColumn;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error has occurred while checking to see if a table had a column. Msg: {0}", ex.Message);
+                    return false;
+                }
+            }
+            else
+            {
+                // There is no connection! We must notify!
+                System.Windows.Forms.MessageBox.Show("Connection failed to open!");
+                return false;
+            }
+        }
+
         /* Tables Are Verified Method
         * Gets a list of tables that currently exist within the
         * database file and compares them with the table design that 
@@ -550,13 +591,89 @@ namespace SQLiteDatabaseManager
             }
         }
 
+        public bool AddColumnToTable(string tableName, string columnDef)
+        {
+            if (OpenConnection())
+            {
+                try
+                {
+                    string sqlQuery = "ALTER TABLE " + tableName + " ADD COLUMN " +  columnDef; 
+                    SQLiteCommand command = new SQLiteCommand(sqlQuery, connection);
+                    command.ExecuteNonQuery();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error adding column to table. Msg: {0}", ex.Message);
+                    return false;
+                }
+           }
+            else
+                return false;
+        }
+
+        /* AlterMerge Table Method
+         * This method merges the data from the existing table into a new table definition,
+         * thereby allowing the changing of a table definition
+         * @param TableName     - The table to merge data from
+         * @param NewDefinition - The new table's definition, in SQL format
+         * @return A boolean indicating success
+         */
+        public bool AlterMergeTable(string tableName, string newDefinition)
+        {
+            if (OpenConnection())
+            {
+                try
+                {
+                    // The connection is open and ready to process commands.
+                    // The first thing to do is find a tableName that is unused.
+                    string unusedTable = "foobar";
+                    Random rand = new Random();
+                    while (tables.ContainsKey(unusedTable))
+                        unusedTable += rand.Next(9).ToString();
+
+                    // We now have an unused table name. Create it with the new definition
+                    this.CreateDatabaseTables(unusedTable + "(" + newDefinition + ")");
+
+                    // Now that the new table is created, merge the data from the old table
+                    // to the new table
+                    string sqlQuery = "INSERT INTO " + unusedTable + " SELECT * FROM " + tableName;
+                    SQLiteCommand command = new SQLiteCommand(sqlQuery, connection);
+                    command.ExecuteNonQuery();
+
+                    // Now the data is merged into the unusedTable. We now need to DROP the old table.
+                    sqlQuery = "DROP TABLE " + tableName;
+                    command = new SQLiteCommand(sqlQuery, connection);
+                    command.ExecuteNonQuery();
+
+                    // Now the old table is dropped. Now we need to rename the unused table to match it.
+                    sqlQuery = "ALTER TABLE " + unusedTable + " RENAME TO " + tableName;
+                    command = new SQLiteCommand(sqlQuery, connection);
+                    command.ExecuteNonQuery();
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("An error has occurred when trying to mergealter a table. Msg: {0}", e.Message);
+                    return false;
+                }
+            }
+            else
+            {
+                // There was an error opening the connection! Notify the user!
+                System.Windows.Forms.MessageBox.Show("Connection failed to open!");
+                return false;
+            }
+        }
+
         /* CloseConnection Method
         * Closes the DatabaseManager objects connection to the database. This should
         * be called whenever consecutive queries are finished to avoid memeory leaks.
         */
         public void CloseConnection()
         {
-            if (connection != null && connection.State == System.Data.ConnectionState.Open)
+            if (connection != null && (connection.State != System.Data.ConnectionState.Closed))
                 connection.Close();
         }
     }
